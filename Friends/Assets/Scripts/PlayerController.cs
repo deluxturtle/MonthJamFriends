@@ -15,8 +15,10 @@ public class PlayerController : MonoBehaviour
     public float talkDistance = 2f;
     public GameObject conversationPanel;
     public bool debug = false;
+    [Tooltip("Place the conversation manager here.")]
+    public ConversationManager conversationManager;
 
-    private bool pressedTalk = false;
+    
     private bool talking = false;
     private float horizontal;
     private float vertical;
@@ -24,6 +26,14 @@ public class PlayerController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        if(conversationManager == null)
+        {
+            conversationManager = GameObject.FindObjectOfType<ConversationManager>();
+            if(conversationManager == null)
+            {
+                Debug.LogWarning("No conversation manager found in scene. PLease investigate if wanting to talk to friends.");
+            }
+        }
         if (conversationPanel == null)
         {
             Debug.LogWarning("No ConversationPanel assigned in inspector.");
@@ -40,7 +50,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            pressedTalk = true;
+            StartConversation();
 
         }
 
@@ -66,12 +76,6 @@ public class PlayerController : MonoBehaviour
 
         //Apply input.
         transform.position += (input * speed) * Time.deltaTime;
-
-        if (pressedTalk && !talking)
-        {
-            StartConversation();
-            pressedTalk = false;
-        }
     }
 
     void StartConversation()
@@ -93,8 +97,9 @@ public class PlayerController : MonoBehaviour
                         //OpenConversation Menu
                         conversationPanel.SetActive(true);
                         talking = true;
+                        conversationManager.StartConversation(friend.GetComponent<FriendBehaviour>().greeting);
 
-
+                        //TODO Freeze Player movement and lock eyes.
                     }
                     else
                     {
