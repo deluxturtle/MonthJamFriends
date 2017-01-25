@@ -6,6 +6,10 @@ using System.Collections;
 /// </summary>
 public class FriendBehaviour : MonoBehaviour {
 
+    public string friendName;
+    public Conversation greeting;
+    [Tooltip("How close the player can be before Friend notices.")]
+    public float lockEyesDistance = 3f;
     Transform player;
 
     void Start()
@@ -15,12 +19,15 @@ public class FriendBehaviour : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Vector3 playerDir = player.position - transform.position;
-        if(playerDir != Vector3.zero)
+        if(Vector3.Distance(transform.position, player.position) < lockEyesDistance)
         {
-            transform.rotation = Quaternion.LookRotation(playerDir, Vector3.up);
-            transform.rotation = Quaternion.Euler(1, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
+            Vector3 playerDir = player.position - transform.position;
+            if (playerDir != Vector3.zero)
+            {
+                transform.rotation = Quaternion.LookRotation(playerDir, Vector3.up);
+                transform.rotation = Quaternion.Euler(1, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
 
+            }
         }
     }
 }
