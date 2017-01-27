@@ -11,8 +11,10 @@ public class ConversationManager : MonoBehaviour {
     public GameObject panelConversation;
     public Text speakerName;
     public Text conversationText;
+    [Tooltip("Place the button for continuing the conversation here.")]
+    public Button nextButton;
 
-
+    private bool nextMessege = false;
     private Animator panelAnimator;
     bool isTalking = false;
     ConversationEntry currentConversationLine;
@@ -38,6 +40,11 @@ public class ConversationManager : MonoBehaviour {
         }
     }
 
+    public void _DisplayNextMessege()
+    {
+        nextMessege = true;
+    }
+
     IEnumerator DisplayConversation(Conversation conv)
     {
         isTalking = true;
@@ -50,12 +57,30 @@ public class ConversationManager : MonoBehaviour {
             conversationText.text = currentConversationLine.ConversationText;
             //Debug.Log(currentConversationLine.SpeakingCharacterName + ": " + currentConversationLine.ConversationText + " " + currentConversationLine.DisplayPicture);
 
-            yield return new WaitForSeconds(3);
+            if(conv.ConversationLines.Length > 1)
+            {
+                yield return StartCoroutine("WaitForInput");
+            }
+            else
+            {
+                nextButton.gameObject.SetActive(false);
+                yield return new WaitForSeconds(3);
+
+            }
         }
 
         panelAnimator.SetBool("CloseTrigger",true);
         yield return new WaitForSeconds(1f);
         panelConversation.SetActive(false);
         isTalking = false;
+    }
+
+    IEnumerator WaitForInput()
+    {
+        while (!nextMessege)
+        {
+            yield return null;
+        }
+        nextMessege = false;
     }
 }
