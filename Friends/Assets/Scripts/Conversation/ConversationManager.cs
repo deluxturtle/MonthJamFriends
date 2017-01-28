@@ -53,7 +53,7 @@ public class ConversationManager : MonoBehaviour {
         foreach(ConversationEntry line in conv.ConversationLines)
         {
             currentConversationLine = line;
-            speakerName.text = currentConversationLine.SpeakingCharacterName;
+            //speakerName.text = currentConversationLine.SpeakingCharacterName;
             conversationText.text = currentConversationLine.ConversationText;
             //Debug.Log(currentConversationLine.SpeakingCharacterName + ": " + currentConversationLine.ConversationText + " " + currentConversationLine.DisplayPicture);
 

@@ -8,7 +8,7 @@ using System.Collections;
 /// </summary>
 public class ConversationEditorWindow : EditorWindow {
 
-
+    Conversation conversationObject;
 
 	void OnGUI()
     {
@@ -19,7 +19,7 @@ public class ConversationEditorWindow : EditorWindow {
                 "You will lose any unsaved changes.", "Ok", "Cancel"))
             {
                 //Reset local variables.
-
+                //conversationObject = new Conversation(); // use .CreateInstance instance
                 this.Repaint();
             }
         }
