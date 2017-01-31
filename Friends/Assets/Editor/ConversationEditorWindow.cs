@@ -8,12 +8,15 @@ using System.Collections.Generic;
 /// </summary>
 public class ConversationEditorWindow : EditorWindow {
 
-    List<ConversationEntry> ConversationLines = new List<ConversationEntry>();
+    List<ConversationEntry> conversationLines = new List<ConversationEntry>();
+    Texture blue;
     string tempText = "";
     Vector2 scrollPos;
+    
 
     void OnGUI()
     {
+        Event e = Event.current;
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("New"))
         {
@@ -21,7 +24,7 @@ public class ConversationEditorWindow : EditorWindow {
                 "You will lose any unsaved changes.", "Ok", "Cancel"))
             {
                 //Reset local variables.
-
+                conversationLines = new List<ConversationEntry>();
                 this.Repaint();
             }
         }
@@ -30,21 +33,26 @@ public class ConversationEditorWindow : EditorWindow {
         #region TextArea
         GUILayout.BeginVertical();
         GUILayout.Label("Conversation");
-        EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(100), GUILayout.Height(100));
-        foreach(ConversationEntry entry in ConversationLines)
+        scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+        foreach(ConversationEntry entry in conversationLines)
         {
-            GUILayout.Label(entry.ConversationText);
+            GUILayout.Button(entry.ConversationText,GUILayout.MinHeight(50));
+
         }
         EditorGUILayout.EndScrollView();
+
+
         tempText = GUILayout.TextField(tempText, 120);
         if (GUILayout.Button("Add More Text", GUILayout.Width(100), GUILayout.Height(50)))
         {
-            ConversationEntry tempEntry;
-            tempEntry.ConversationText = tempText;
-            ConversationLines.Add(tempEntry);
-            tempText = "";
+            SubmitText();
         }
-        
+
+        if (e.isKey && e.keyCode == KeyCode.Return)
+        {
+            SubmitText();
+        }
+
         GUILayout.EndVertical();
         #endregion
 
@@ -52,5 +60,13 @@ public class ConversationEditorWindow : EditorWindow {
         {
             Debug.Log("Feature Incomplete.");
         }
+    }
+
+    void SubmitText()
+    {
+        ConversationEntry tempEntry;
+        tempEntry.ConversationText = tempText;
+        conversationLines.Add(tempEntry);
+        tempText = "";
     }
 }
